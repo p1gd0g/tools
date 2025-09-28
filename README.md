@@ -3,7 +3,7 @@
 ## build
 
 ```
-$ENV:build_vsn='0.7.0'
+$ENV:build_vsn='0.1.0'
 flutter build web --build-name $ENV:build_vsn --dart-define vsn=$ENV:build_vsn --output public
 ```
 
