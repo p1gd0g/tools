@@ -3,6 +3,95 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+class TimeDate2Timestamp extends StatelessWidget {
+  const TimeDate2Timestamp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var controller = Get.put(TimestampConverterController());
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            TextButton(
+              onPressed: () => {
+                showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1970),
+                  lastDate: DateTime(2100),
+                ).then((value) {
+                  if (value != null) {
+                    controller.userInputDateTime.value = DateTime(
+                      value.year,
+                      value.month,
+                      value.day,
+                      controller.userInputDateTime.value.hour,
+                      controller.userInputDateTime.value.minute,
+                    );
+                  }
+                }),
+              },
+              child: Obx(
+                // format date to yyyy-MM-dd
+                () => Text(
+                  '选择日期：${controller.userInputDateTime.value.toString().substring(0, 10)}',
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () => {
+                showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                ).then((value) {
+                  if (value != null) {
+                    controller.userInputDateTime.value = DateTime(
+                      controller.userInputDateTime.value.year,
+                      controller.userInputDateTime.value.month,
+                      controller.userInputDateTime.value.day,
+                      value.hour,
+                      value.minute,
+                    );
+                  }
+                }),
+              },
+              child: Obx(
+                () => Text(
+                  '选择时间：${controller.userInputDateTime.value.toString().substring(11, 16)}',
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Obx(() {
+                  return Text(
+                    '时间戳：${controller.userInputDateTime.value.millisecondsSinceEpoch ~/ 1000}',
+                  );
+                }),
+                IconButton(
+                  onPressed: () {
+                    var dt = controller.userInputDateTime.value;
+                    var timestamp = dt.millisecondsSinceEpoch ~/ 1000;
+                    // copy to clipboard
+                    Clipboard.setData(
+                      ClipboardData(text: timestamp.toString()),
+                    );
+                    Get.snackbar('提示', '已复制到剪贴板');
+                  },
+                  icon: const Icon(Icons.copy),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class Timestamp2TimeDate extends StatelessWidget {
   const Timestamp2TimeDate({super.key});
 
@@ -101,7 +190,7 @@ class TimestampConverter extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
 
-            children: [Timestamp2TimeDate()],
+            children: [Timestamp2TimeDate(), TimeDate2Timestamp()],
           ),
         ),
       ),
@@ -112,6 +201,7 @@ class TimestampConverter extends StatelessWidget {
 class TimestampConverterController extends GetxController {
   var timerCounter = 0.obs;
   var userInputTimestamp = ''.obs;
+  var userInputDateTime = DateTime.now().obs;
 
   @override
   void onInit() {
