@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -195,6 +197,11 @@ class Timestamp2TimeDate extends StatelessWidget {
 
 class TimestampConverter extends StatelessWidget {
   const TimestampConverter({super.key});
+
+  // static const String route = '时间戳';
+  // static const String route = r'时间戳';
+  static String route = Uri.encodeComponent('时间戳');
+  // static const String route = '%E6%97%B6%E9%97%B4%E6%88%B3';
 
   @override
   Widget build(BuildContext context) {

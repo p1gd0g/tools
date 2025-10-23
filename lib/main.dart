@@ -31,10 +31,13 @@ void main() {
         // }
       },
 
-      routes: {
-        '/${TimestampConverter().runtimeType}': (context) =>
-            const TimestampConverter(),
-      },
+      initialRoute: '/',
+      getPages: [
+        GetPage(
+          name: '/${TimestampConverter.route}',
+          page: () => TimestampConverter(),
+        ),
+      ],
 
       // theme: AppTheme.light,
       home: Scaffold(
@@ -47,7 +50,7 @@ void main() {
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 onTap: () {
-                  Get.to(const TimestampConverter());
+                  Get.toNamed('/${TimestampConverter.route}');
                 },
                 child: Container(
                   alignment: Alignment.center,
