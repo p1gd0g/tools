@@ -98,6 +98,10 @@ class Timestamp2TimeDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var controller = Get.put(TimestampConverterController());
+    final textCtrl = TextEditingController(
+      text: controller.userInputTimestamp.value,
+    );
+    final focusNode = FocusNode();
 
     return Card(
       child: Padding(
@@ -130,12 +134,24 @@ class Timestamp2TimeDate extends StatelessWidget {
                 ),
               ],
             ),
-            TextField(
-              decoration: const InputDecoration(labelText: '输入时间戳（支持秒和毫秒）'),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                controller.userInputTimestamp.value = value;
+            MouseRegion(
+              onEnter: (_) {
+                // focus and select all text when mouse hovers
+                focusNode.requestFocus();
+                textCtrl.selection = TextSelection(
+                  baseOffset: 0,
+                  extentOffset: textCtrl.text.length,
+                );
               },
+              child: TextField(
+                controller: textCtrl,
+                focusNode: focusNode,
+                decoration: const InputDecoration(labelText: '输入时间戳（支持秒和毫秒）'),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  controller.userInputTimestamp.value = value;
+                },
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -186,7 +202,7 @@ class TimestampConverter extends StatelessWidget {
       appBar: AppBar(title: const Text('时间戳转换')),
       body: Center(
         child: SizedBox(
-          width: 500,
+          width: 400,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
 
