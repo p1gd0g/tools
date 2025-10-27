@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -137,9 +135,21 @@ class Timestamp2TimeDate extends StatelessWidget {
               ],
             ),
             MouseRegion(
-              onEnter: (_) {
+              onEnter: (_) async {
                 // focus and select all text when mouse hovers
                 focusNode.requestFocus();
+
+                if (textCtrl.text.isEmpty) {
+                  await Clipboard.getData(Clipboard.kTextPlain).then((value) {
+                    if (value != null &&
+                        value.text != null &&
+                        int.tryParse(value.text!) != null) {
+                      textCtrl.text = value.text!;
+                      controller.userInputTimestamp.value = value.text!;
+                    }
+                  });
+                }
+
                 textCtrl.selection = TextSelection(
                   baseOffset: 0,
                   extentOffset: textCtrl.text.length,
