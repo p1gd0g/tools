@@ -1,68 +1,62 @@
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:myapp/time/timestamp.dart';
-import 'dart:developer' as developer;
-import 'package:stack_trace/stack_trace.dart';
+
+final logger = Logger();
+
+final router = GoRouter(
+  routes: [
+    GoRoute(path: '/', builder: (context, state) => const HomePage()),
+    GoRoute(
+      path: '/${TimestampConverter.route}',
+      builder: (context, state) => const TimestampConverter(),
+    ),
+  ],
+);
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then((
-  //   x,
-  // ) {
-  //   FirebaseAnalytics.instance.logAppOpen();
-  // });
-
   usePathUrlStrategy();
+  logger.i('App started');
+  runApp(const ProviderScope(child: MyApp()));
+}
 
-  runApp(
-    GetMaterialApp(
-      title: "p1gd0g's tools",
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-      logWriterCallback: (value, {isError = false}) {
-        // void defaultLogWriterCallback(String value, {bool isError = false}) {
-        if (isError || Get.isLogEnable) {
-          developer.log(
-            '[${DateTime.now()}] $value\n${Trace.current().terse.frames.getRange(1, 4).join('\n')}',
-            name: 'GETX',
-          );
-        }
-        // }
-      },
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(title: "p1gd0g's tools", routerConfig: router);
+  }
+}
 
-      initialRoute: '/',
-      getPages: [
-        GetPage(
-          name: '/${TimestampConverter.route}',
-          page: () => TimestampConverter(),
-        ),
-      ],
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-      // theme: AppTheme.light,
-      home: Scaffold(
-        body: Wrap(
-          // alignment: WrapAlignment.center,
-          // runAlignment: WrapAlignment.center,
-          // crossAxisAlignment: WrapCrossAlignment.center,
-          children: [
-            Card(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(12),
-                onTap: () {
-                  Get.toNamed('/${TimestampConverter.route}');
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 200,
-                  height: 200,
-                  child: Text('时间戳转换'),
-                ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Wrap(
+        children: [
+          Card(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                context.go('/${TimestampConverter.route}');
+              },
+              child: Container(
+                alignment: Alignment.center,
+                width: 200,
+                height: 200,
+                child: const Text('时间戳转换'),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    ),
-  );
+    );
+  }
 }
