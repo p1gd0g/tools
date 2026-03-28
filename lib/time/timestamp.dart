@@ -54,8 +54,8 @@ void _copyAndNotify(BuildContext context, String text) {
 
 // --- Widgets ---
 
-class TimeDate2Timestamp extends ConsumerWidget {
-  const TimeDate2Timestamp({super.key});
+class DateTime2Timestamp extends ConsumerWidget {
+  const DateTime2Timestamp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -135,14 +135,14 @@ class TimeDate2Timestamp extends ConsumerWidget {
   }
 }
 
-class Timestamp2TimeDate extends ConsumerStatefulWidget {
-  const Timestamp2TimeDate({super.key});
+class Timestamp2DateTime extends ConsumerStatefulWidget {
+  const Timestamp2DateTime({super.key});
 
   @override
-  ConsumerState<Timestamp2TimeDate> createState() => _Timestamp2TimeDateState();
+  ConsumerState<Timestamp2DateTime> createState() => _Timestamp2DateTimeState();
 }
 
-class _Timestamp2TimeDateState extends ConsumerState<Timestamp2TimeDate> {
+class _Timestamp2DateTimeState extends ConsumerState<Timestamp2DateTime> {
   late final TextEditingController _textCtrl;
   late final FocusNode _focusNode;
 
@@ -265,7 +265,7 @@ class TimestampConverter extends StatelessWidget {
           width: 400,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [Timestamp2TimeDate(), TimeDate2Timestamp()],
+            children: const [Timestamp2DateTime(), DateTime2Timestamp()],
           ),
         ),
       ),
